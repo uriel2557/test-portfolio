@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Compétences — Uriel Hemedi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #111111;
+      --bg3: #181818;
+      --accent: #c9a96e;
+      --accent2: #e8c98a;
+      --text: #e8e4dc;
+      --muted: #6b6560;
+      --border: #242424;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* CURSOR */
+    .cursor {
+      position: fixed; width: 8px; height: 8px;
+      background: var(--accent); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, background 0.3s;
+    }
+    .cursor-ring {
+      position: fixed; width: 36px; height: 36px;
+      border: 1px solid rgba(201,169,110,0.4); border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s;
+    }
+    .cursor.hover { width: 14px; height: 14px; background: var(--accent2); }
+    .cursor-ring.hover { width: 56px; height: 56px; border-color: rgba(201,169,110,0.6); }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 28px 60px;
+      background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+      backdrop-filter: blur(4px);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-style: italic;
+      color: var(--accent); letter-spacing: 0.05em; text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 40px; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+    /* PAGE HEADER */
+    .page-header {
+      min-height: 40vh;
+      display: flex; align-items: flex-end;
+      padding: 140px 60px 60px;
+      position: relative; overflow: hidden;
+    }
+    .page-header-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 50%, rgba(201,169,110,0.05) 0%, transparent 60%);
+    }
+    .page-header-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 80px 80px; opacity: 0.25;
+      mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+    }
+    .page-header-content { position: relative; }
+    .breadcrumb {
+      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 16px;
+    }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 300; line-height: 0.95;
+      opacity: 0; animation: fadeUp 0.9s 0.2s forwards;
+    }
+    .page-title em { font-style: italic; color: var(--accent); }
+
+    /* MAIN CONTENT */
+    main { padding: 80px 60px 120px; }
+
+    /* INTRO */
+    .intro {
+      max-width: 640px; margin-bottom: 80px;
+      opacity: 0; animation: fadeUp 0.9s 0.4s forwards;
+    }
+    .intro p {
+      font-size: 0.8rem; line-height: 2; color: var(--muted);
+    }
+
+    /* COMPETENCE CATEGORY */
+    .category { margin-bottom: 80px; }
+    .category-header {
+      display: flex; align-items: center; gap: 20px;
+      margin-bottom: 32px; padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .category-num {
+      font-size: 0.6rem; letter-spacing: 0.2em; color: var(--accent);
+    }
+    .category-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 300;
+    }
+
+    /* SKILL BARS */
+    .skill-bar-list { display: flex; flex-direction: column; gap: 20px; }
+    .skill-bar-item { display: grid; grid-template-columns: 200px 1fr 40px; align-items: center; gap: 20px; }
+    .skill-bar-name { font-size: 0.72rem; letter-spacing: 0.08em; color: var(--text); }
+    .bar-track {
+      height: 2px; background: var(--border); position: relative; overflow: hidden;
+    }
+    .bar-fill {
+      position: absolute; top: 0; left: 0; height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      width: 0%; transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .skill-bar-pct { font-size: 0.65rem; color: var(--accent); text-align: right; }
+
+    /* SKILL CARDS GRID */
+    .cards-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+    }
+    .comp-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      padding: 32px 28px;
+      transition: background 0.3s, border-color 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .comp-card::before {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+    }
+    .comp-card:hover { background: var(--bg3); border-color: rgba(201,169,110,0.2); }
+    .comp-card:hover::before { transform: scaleX(1); }
+    .comp-card-icon { font-size: 1.6rem; margin-bottom: 16px; display: block; }
+    .comp-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; font-weight: 400; margin-bottom: 10px;
+    }
+    .comp-card-desc { font-size: 0.68rem; line-height: 1.8; color: var(--muted); }
+    .comp-tags { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 0.58rem; letter-spacing: 0.1em;
+      padding: 3px 9px; border: 1px solid var(--border); color: var(--muted);
+    }
+
+    /* TOOLS SECTION */
+    .tools-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+    }
+    .tool-item {
+      background: var(--bg2); border: 1px solid var(--border);
+      padding: 24px; display: flex; flex-direction: column;
+      align-items: center; gap: 10px; text-align: center;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .tool-item:hover { background: var(--bg3); border-color: rgba(201,169,110,0.2); }
+    .tool-icon { font-size: 1.4rem; }
+    .tool-name { font-size: 0.65rem; letter-spacing: 0.1em; color: var(--text); }
+    .tool-level { font-size: 0.58rem; color: var(--accent); }
+
+    /* WIDGETS GRID */
+    .widgets-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-bottom: 60px;
+    }
+    .widgets-grid .widget-card:nth-child(4) {
+      grid-column: 1 / 2;
+    }
+    .widgets-grid .widget-card:nth-child(5) {
+      grid-column: 2 / 3;
+    }
+    .widget-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 40px 36px;
+      text-decoration: none;
+      color: var(--text);
+      display: flex; flex-direction: column;
+      gap: 12px;
+      position: relative; overflow: hidden;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .widget-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 20%, rgba(201,169,110,0.06), transparent 70%);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .widget-card::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+    }
+    .widget-card:hover { background: var(--bg3); border-color: rgba(201,169,110,0.25); }
+    .widget-card:hover::before { opacity: 1; }
+    .widget-card:hover::after { transform: scaleX(1); }
+    .widget-num {
+      font-size: 0.58rem; letter-spacing: 0.2em; color: var(--accent);
+    }
+    .widget-icon {
+      font-size: 2rem; color: var(--muted);
+      transition: color 0.3s;
+    }
+    .widget-card:hover .widget-icon { color: var(--accent); }
+    .widget-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 300;
+      margin-top: 4px;
+    }
+    .widget-desc {
+      font-size: 0.68rem; line-height: 1.8;
+      color: var(--muted); flex: 1;
+    }
+    .widget-arrow {
+      font-size: 0.65rem; letter-spacing: 0.15em;
+      color: var(--accent); margin-top: 12px;
+      transition: letter-spacing 0.3s;
+    }
+    .widget-card:hover .widget-arrow { letter-spacing: 0.25em; }
+
+    /* BACK LINK */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 12px;
+      text-decoration: none; color: var(--muted);
+      font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+      margin-bottom: 80px;
+      transition: color 0.3s, gap 0.3s;
+    }
+    .back-link:hover { color: var(--accent); gap: 18px; }
+    .back-link::before { content: '←'; font-size: 1rem; }
+
+    /* FOOTER */
+    footer {
+      padding: 32px 60px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.62rem; letter-spacing: 0.1em; color: var(--muted);
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 900px) {
+      nav { padding: 24px 30px; }
+      main, .page-header { padding-left: 30px; padding-right: 30px; }
+      .cards-grid { grid-template-columns: 1fr 1fr; }
+      .tools-grid { grid-template-columns: repeat(3, 1fr); }
+      .skill-bar-item { grid-template-columns: 140px 1fr 36px; }
+      .widgets-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .cards-grid { grid-template-columns: 1fr; }
+      .tools-grid { grid-template-columns: repeat(2, 1fr); }
+      .skill-bar-item { grid-template-columns: 1fr; gap: 6px; }
+      .skill-bar-pct { text-align: left; }
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+      .widgets-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <a href="portfolio.html" class="nav-logo">U.H.</a>
+    <ul class="nav-links">
+      <li><a href="about.html">À propos</a></li>
+      <li><a href="competences.html" class="active">Compétences</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header">
+    <div class="page-header-bg"></div>
+    <div class="page-header-grid"></div>
+    <div class="page-header-content">
+      <p class="breadcrumb"><a href="portfolio.html">Accueil</a> &nbsp;/&nbsp; Compétences</p>
+      <h1 class="page-title">Mes<br><em>Compétences</em></h1>
+    </div>
+  </div>
+
+  <main>
+    <a href="portfolio.html" class="back-link reveal">Retour au portfolio</a>
+
+    <div class="intro reveal">
+      <p>
+        En tant qu'étudiant en BUT Techniques de commercialisation — parcours Marketing digital, E-business et Entrepreneuriat — j'ai développé un ensemble de compétences à l'intersection du marketing, du digital et de la stratégie commerciale. Cliquez sur un domaine pour en savoir plus.
+      </p>
+    </div>
+
+    <!-- WIDGETS NAVIGATION -->
+    <div class="widgets-grid reveal">
+      <a href="marketing.html" class="widget-card">
+        <div class="widget-num">01</div>
+        <div class="widget-icon">◈</div>
+        <h2 class="widget-title">Marketing</h2>
+        <p class="widget-desc">Stratégie, analyse de marché, comportement consommateur et mix marketing.</p>
+        <span class="widget-arrow">Explorer →</span>
+      </a>
+      <a href="vente.html" class="widget-card">
+        <div class="widget-num">02</div>
+        <div class="widget-icon">◎</div>
+        <h2 class="widget-title">Vente</h2>
+        <p class="widget-desc">Techniques de vente, négociation, gestion de la relation client et prospection.</p>
+        <span class="widget-arrow">Explorer →</span>
+      </a>
+      <a href="communication.html" class="widget-card">
+        <div class="widget-num">03</div>
+        <div class="widget-icon">⟡</div>
+        <h2 class="widget-title">Communication</h2>
+        <p class="widget-desc">Communication visuelle, rédaction, prise de parole et identité de marque.</p>
+        <span class="widget-arrow">Explorer →</span>
+      </a>
+      <a href="marketing-digital.html" class="widget-card">
+        <div class="widget-num">04</div>
+        <div class="widget-icon">⟨/⟩</div>
+        <h2 class="widget-title">Marketing Digital</h2>
+        <p class="widget-desc">SEO, réseaux sociaux, e-mailing, publicité en ligne et analytics.</p>
+        <span class="widget-arrow">Explorer →</span>
+      </a>
+      <a href="entrepreneuriat.html" class="widget-card">
+        <div class="widget-num">05</div>
+        <div class="widget-icon">◇</div>
+        <h2 class="widget-title">Entrepreneuriat</h2>
+        <p class="widget-desc">Business plan, étude de marché, pitch, innovation et création de valeur.</p>
+        <span class="widget-arrow">Explorer →</span>
+      </a>
+    </div>
+
+  </main>
+
+  <footer>
+    <span>© 2025 Uriel Hemedi — Tous droits réservés</span>
+    <span>Conçu & développé avec soin</span>
+  </footer>
+
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    const animateCursor = () => {
+      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+      rx += (mx - rx) * 0.14; ry += (my - ry) * 0.14;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animateCursor);
+    };
+    animateCursor();
+    document.querySelectorAll('a, button, .comp-card, .tool-item').forEach(el => {
+      el.addEventListener('mouseenter', () => { cursor.classList.add('hover'); ring.classList.add('hover'); });
+      el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); ring.classList.remove('hover'); });
+    });
+
+    // Scroll reveal + bar animation
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+            entry.target.querySelectorAll('.bar-fill').forEach(bar => {
+              bar.style.width = bar.dataset.width + '%';
+            });
+          }, i * 100);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

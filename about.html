@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>À propos — Uriel Hemedi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--bg:#0a0a0a;--bg2:#111111;--bg3:#181818;--accent:#c9a96e;--accent2:#e8c98a;--text:#e8e4dc;--muted:#6b6560;--border:#242424;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;font-weight:300;overflow-x:hidden;cursor:auto;}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:28px 60px;background:linear-gradient(to bottom,rgba(10,10,10,.97),transparent);backdrop-filter:blur(6px);}
+    .nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-style:italic;color:var(--accent);letter-spacing:.05em;text-decoration:none;}
+    .nav-logo:hover{opacity:.7;}
+    .nav-links{display:flex;gap:40px;list-style:none;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;transition:color .3s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--accent);}
+
+    .page-header{min-height:36vh;display:flex;align-items:flex-end;padding:130px 60px 52px;position:relative;overflow:hidden;}
+    .page-header-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 75% 50%,rgba(201,169,110,.05),transparent 60%);}
+    .page-header-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:80px 80px;opacity:.22;mask-image:radial-gradient(ellipse at center,black 20%,transparent 80%);}
+    .breadcrumb{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;position:relative;}
+    .breadcrumb a{color:var(--accent);text-decoration:none;}
+    .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,7vw,5.5rem);font-weight:300;line-height:.95;position:relative;opacity:0;animation:fadeUp .9s .2s forwards;}
+    .page-title em{font-style:italic;color:var(--accent);}
+
+    main{padding:72px 60px 100px;}
+
+    /* INTRO QUOTE */
+    .intro-quote{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,3vw,2rem);font-style:italic;font-weight:300;line-height:1.5;color:var(--accent);border-left:2px solid var(--accent);padding-left:32px;margin-bottom:64px;max-width:700px;opacity:0;animation:fadeUp .9s .4s forwards;}
+
+    /* LAYOUT 2 COLS */
+    .about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:start;}
+
+    /* LEFT — texte */
+    .about-section{margin-bottom:48px;}
+    .section-label{font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+    .about-section p{font-size:.77rem;line-height:2;color:var(--muted);margin-bottom:14px;}
+    .about-section p strong{color:var(--text);font-weight:400;}
+
+    /* TAGS compétences */
+    .tags-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+    .tag{font-size:.58rem;letter-spacing:.1em;border:1px solid var(--border);color:var(--muted);padding:4px 11px;}
+
+    /* CV DOWNLOAD */
+    .cv-btn{display:inline-flex;align-items:center;gap:12px;margin-top:28px;text-decoration:none;color:var(--accent);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;border:1px solid var(--accent);padding:12px 28px;transition:background .3s,color .3s;}
+    .cv-btn:hover{background:var(--accent);color:var(--bg);}
+
+    /* RIGHT — timeline cards */
+    .timeline{display:flex;flex-direction:column;gap:2px;}
+    .tl-card{background:var(--bg2);border:1px solid var(--border);padding:22px 26px;position:relative;transition:border-color .3s;}
+    .tl-card:hover{border-color:rgba(201,169,110,.25);}
+    .tl-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent);transform:scaleY(0);transform-origin:top;transition:transform .3s;}
+    .tl-card:hover::before{transform:scaleY(1);}
+    .tl-period{font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+    .tl-type{font-size:.54rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+    .tl-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;color:var(--text);margin-bottom:4px;}
+    .tl-place{font-size:.65rem;color:var(--muted);}
+    .tl-desc{font-size:.64rem;line-height:1.7;color:var(--muted);margin-top:8px;}
+
+    .tl-section-title{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);padding:20px 0 12px;border-bottom:1px solid var(--border);margin-bottom:2px;}
+
+    footer{padding:28px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:.6rem;letter-spacing:.1em;color:var(--muted);}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+    .reveal{opacity:0;transform:translateY(36px);transition:opacity .8s,transform .8s;}
+    .reveal.visible{opacity:1;transform:none;}
+    @media(max-width:900px){nav{padding:20px 24px;}main,.page-header{padding-left:24px;padding-right:24px;}.about-grid{grid-template-columns:1fr;}}
+    @media(max-width:600px){footer{flex-direction:column;gap:10px;}}
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="portfolio.html" class="nav-logo">U.H.</a>
+    <ul class="nav-links">
+      <li><a href="about.html" class="active">À propos</a></li>
+      <li><a href="competences.html">Compétences</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header">
+    <div class="page-header-bg"></div>
+    <div class="page-header-grid"></div>
+    <div style="position:relative">
+      <p class="breadcrumb"><a href="portfolio.html">Accueil</a> / À propos</p>
+      <h1 class="page-title"><em>À propos</em><br>de moi</h1>
+    </div>
+  </div>
+
+  <main>
+    <blockquote class="intro-quote">"Marketing, digital et entrepreneuriat —<br>construire, convaincre, créer."</blockquote>
+
+    <div class="about-grid">
+
+      <!-- COLONNE GAUCHE -->
+      <div>
+        <div class="about-section reveal">
+          <p class="section-label">Qui suis-je ?</p>
+          <p>Je m'appelle <strong>Uriel Hemedi</strong>, étudiant en <strong>BUT Techniques de Commercialisation</strong> à l'IUT de Ville d'Avray, Université Paris Nanterre. Je suis en 2ᵉ année, parcours <strong>Marketing digital, E-business et Entrepreneuriat</strong>.</p>
+          <p>Passionné par les stratégies de communication et le monde du digital, j'ai déjà conçu une <strong>campagne de communication 360°</strong> pour un annonceur réel (OTSM, Île Sainte-Marie, Madagascar), de l'analyse de marché jusqu'aux recommandations stratégiques finales.</p>
+          <p>Je maîtrise des outils créatifs comme <strong>Canva</strong> et <strong>CapCut</strong>, et je suis en mesure d'analyser les performances marketing via les <strong>KPI</strong> et les outils comme Google Ads.</p>
+        </div>
+
+        <div class="about-section reveal">
+          <p class="section-label">Expérience professionnelle</p>
+          <p>Actuellement en stage en tant qu'<strong>Assistant commercial chez 1erGest à Meaux</strong> (avril–juin 2026), j'analyse les besoins clients et prépare des propositions commerciales et devis adaptés.</p>
+          <p>Avant cela, j'ai travaillé comme <strong>employé polyvalent chez McDonald's à Noisy-le-Grand</strong> (mars–septembre 2025) : gestion simultanée de la caisse, de la préparation et de l'accueil client, ainsi que la formation de nouveaux équipiers. Une expérience qui a forgé ma réactivité et mon sens du service.</p>
+        </div>
+
+        <div class="about-section reveal">
+          <p class="section-label">Formation</p>
+          <p><strong>BUT Techniques de Commercialisation</strong> — IUT Ville d'Avray, Nanterre (2024–2027)<br>Fondamentaux de la communication commerciale, analyse des besoins clients, veille marketing, conception de campagnes.</p>
+          <p><strong>Baccalauréat Général — Mention Assez Bien</strong> — Lycée Saint-Joseph LaSalle, Pantin (2020–2023)<br>Spécialités : SES, Mathématiques · Option : Droit et grands enjeux.</p>
+        </div>
+
+        <div class="about-section reveal">
+          <p class="section-label">Compétences clés</p>
+          <div class="tags-wrap">
+            <span class="tag">Analyse des KPI marketing</span>
+            <span class="tag">Stratégie de communication</span>
+            <span class="tag">Canva</span>
+            <span class="tag">CapCut</span>
+            <span class="tag">Google Ads</span>
+            <span class="tag">Analyse SWOT / PESTEL</span>
+            <span class="tag">Plan de communication</span>
+            <span class="tag">SONCAS</span>
+            <span class="tag">Benchmark</span>
+            <span class="tag">Anglais B1</span>
+            <span class="tag">Espagnol A2</span>
+            <span class="tag">Permis B</span>
+          </div>
+        </div>
+
+        <div class="about-section reveal">
+          <p class="section-label">Centres d'intérêt</p>
+          <p><strong>Football</strong> — Pratique en club depuis 10 ans, favorisant le travail d'équipe et le dépassement de soi.</p>
+          <p><strong>Voyage</strong> — Passion pour la découverte de cultures et paysages variés, renforçant l'adaptabilité et la sensibilité interculturelle.</p>
+        </div>
+
+        <a href="mailto:Urielhemedi2@gmail.com" class="cv-btn reveal">✉ Urielhemedi2@gmail.com</a>
+      </div>
+
+      <!-- COLONNE DROITE — Timeline -->
+      <div class="reveal">
+        <p class="tl-section-title">Expériences</p>
+        <div class="timeline">
+          <div class="tl-card">
+            <div class="tl-period">Avr. 2026 — Juin 2026</div>
+            <div class="tl-type">Stage</div>
+            <div class="tl-title">Assistant Commercial</div>
+            <div class="tl-place">1erGest · Meaux</div>
+            <div class="tl-desc">Analyse des besoins clients, préparation de propositions commerciales et suivi des devis.</div>
+          </div>
+          <div class="tl-card">
+            <div class="tl-period">Mars 2025 — Sept. 2025</div>
+            <div class="tl-type">Emploi</div>
+            <div class="tl-title">Employé Polyvalent</div>
+            <div class="tl-place">McDonald's · Noisy-le-Grand</div>
+            <div class="tl-desc">Gestion caisse, préparation, accueil client et formation des nouveaux équipiers.</div>
+          </div>
+        </div>
+
+        <p class="tl-section-title" style="margin-top:24px;">Projets universitaires</p>
+        <div class="timeline">
+          <div class="tl-card">
+            <div class="tl-period">Jan. 2026 — Mars 2026</div>
+            <div class="tl-type">Projet académique</div>
+            <div class="tl-title">Campagne Communication 360°</div>
+            <div class="tl-place">OTSM · Île Sainte-Marie, Madagascar</div>
+            <div class="tl-desc">Analyse de marché, définition du positionnement, élaboration du plan de communication 360° et recommandations stratégiques pour un annonceur réel.</div>
+          </div>
+          <div class="tl-card">
+            <div class="tl-period">Nov. 2025</div>
+            <div class="tl-type">Projet marketing</div>
+            <div class="tl-title">Calendrier Éditorial</div>
+            <div class="tl-place">Avril Cosmétiques</div>
+            <div class="tl-desc">Analyse des besoins consommateurs et élaboration d'un calendrier éditorial avec sélection de contenus adaptés aux réseaux sociaux.</div>
+          </div>
+          <div class="tl-card">
+            <div class="tl-period">2024 — 2025</div>
+            <div class="tl-type">SAE Entrepreneuriat S3</div>
+            <div class="tl-title">Rencontres du 7ème Art</div>
+            <div class="tl-place">IUT Ville d'Avray</div>
+            <div class="tl-desc">Conception d'un projet entrepreneurial complet : étude de marché, business model canvas, pitch et rapport final.</div>
+          </div>
+        </div>
+
+        <p class="tl-section-title" style="margin-top:24px;">Formation</p>
+        <div class="timeline">
+          <div class="tl-card">
+            <div class="tl-period">2024 — 2027</div>
+            <div class="tl-type">Diplôme en cours</div>
+            <div class="tl-title">BUT Techniques de Commercialisation</div>
+            <div class="tl-place">IUT Ville d'Avray · Paris Nanterre</div>
+            <div class="tl-desc">Parcours Marketing digital, E-business et Entrepreneuriat.</div>
+          </div>
+          <div class="tl-card">
+            <div class="tl-period">2020 — 2023</div>
+            <div class="tl-type">Baccalauréat</div>
+            <div class="tl-title">Bac Général — Mention Assez Bien</div>
+            <div class="tl-place">Lycée Saint-Joseph LaSalle · Pantin</div>
+            <div class="tl-desc">Spécialités SES, Mathématiques · Option Droit et grands enjeux.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <span>© 2025 Uriel Hemedi — Tous droits réservés</span>
+    <span>06 47 20 33 77 · Noisy-le-Sec</span>
+  </footer>
+
+  <script>
+    const obs=new IntersectionObserver(entries=>entries.forEach((e,i)=>{
+      if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*100);
+    }),{threshold:0.08});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  </script>
+</body>
+</html>
